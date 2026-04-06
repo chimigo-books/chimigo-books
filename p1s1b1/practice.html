@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ChiMigo™ · Practice · Set 1 · Book 1 · Who Are You?</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{background:#F5F5F0;}
+body{background:#F5F5F0;font-family:'Nunito',sans-serif;
+     width:auto!important;height:auto!important;overflow:visible!important;}
+.cm-wrap{max-width:900px;margin:0 auto;}
+.cm-hdr{background:linear-gradient(135deg,#004C52,#006D75);color:#fff;
+  padding:.85rem 1.2rem;display:flex;align-items:center;
+  justify-content:space-between;flex-wrap:wrap;gap:.5rem;}
+.cm-hdr h1{font-size:.9rem;font-weight:900;margin:0;}
+.cm-hdr p{font-size:.72rem;opacity:.8;margin:0;}
+.cm-prog{height:4px;background:rgba(0,0,0,.12);}
+.cm-prog-fill{height:100%;background:#A8D8DC;transition:width .5s;}
+.cm-footer{background:#004C52;color:rgba(255,255,255,.7);
+  text-align:center;padding:.55rem 1rem;font-size:.72rem;}
+.cm-footer strong{color:#fff;}
+.cm-footer a{color:rgba(255,255,255,.9);text-decoration:underline;}
+.tab-bar{background:#E0F5F6;display:flex;border-bottom:2px solid #A8D8DC;
+  overflow-x:auto;scrollbar-width:none;}
+.tab-bar::-webkit-scrollbar{display:none;}
+.tab{padding:.55rem .85rem;font-size:.75rem;font-weight:800;color:#004C52;cursor:pointer;
+  white-space:nowrap;border-bottom:3px solid transparent;margin-bottom:-2px;
+  transition:all .2s;user-select:none;-webkit-tap-highlight-color:transparent;}
+.tab.active{color:#C85A1E;border-bottom-color:#C85A1E;}
+.tab:hover:not(.active){background:rgba(0,76,82,.06);}
+.panel{display:none;padding:1.2rem 1rem 2rem;}
+.panel.active{display:block;}
+.section-title{font-size:1rem;font-weight:900;color:#004C52;margin-bottom:.9rem;}
+
+/* Flashcards */
+.cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:.8rem;}
+.flash-card{background:#fff;border-radius:14px;box-shadow:0 2px 8px rgba(0,0,0,.10);
+  cursor:pointer;perspective:600px;height:130px;position:relative;
+  -webkit-tap-highlight-color:transparent;transition:box-shadow .2s;}
+.flash-card:hover{box-shadow:0 4px 16px rgba(0,76,82,.18);}
+.flash-inner{width:100%;height:100%;position:relative;
+  transform-style:preserve-3d;transition:transform .45s cubic-bezier(.4,0,.2,1);}
+.flash-card.flipped .flash-inner{transform:rotateY(180deg);}
+.flash-front,.flash-back{position:absolute;inset:0;border-radius:14px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  backface-visibility:hidden;-webkit-backface-visibility:hidden;padding:.6rem;}
+.flash-front{background:linear-gradient(145deg,#004C52,#006D75);color:#fff;}
+.flash-back{background:#fff;transform:rotateY(180deg);color:#004C52;}
+.flash-zh{font-size:2.4rem;line-height:1;margin-bottom:.2rem;}
+.flash-py{font-size:.68rem;opacity:.85;margin-bottom:.15rem;font-weight:700;}
+.flash-hint{font-size:.6rem;opacity:.55;margin-top:.3rem;}
+.flash-back .flash-en{font-size:1rem;font-weight:900;}
+.flash-back .flash-tip{font-size:.62rem;color:#666;text-align:center;margin-top:.2rem;}
+.flash-speak{position:absolute;bottom:6px;right:8px;
+  background:rgba(255,255,255,.2);border:none;border-radius:50%;
+  width:26px;height:26px;cursor:pointer;color:#fff;font-size:.75rem;
+  display:flex;align-items:center;justify-content:center;}
+.flash-back .flash-speak{background:#E0F5F6;color:#004C52;}
+.fc-progress{font-size:.78rem;font-weight:700;color:#004C52;
+  text-align:center;padding:.5rem;background:#E0F5F6;border-radius:8px;margin-bottom:.8rem;}
+
+/* Quiz */
+.quiz-prompt{background:linear-gradient(135deg,#004C52,#006D75);
+  border-radius:16px;padding:1.4rem 1rem;text-align:center;
+  color:#fff;margin-bottom:1.2rem;min-height:90px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.quiz-english{font-size:1.6rem;font-weight:900;}
+.quiz-sub{font-size:.75rem;opacity:.75;margin-top:.25rem;}
+.quiz-options{display:grid;grid-template-columns:1fr 1fr;gap:.7rem;}
+.opt-btn{background:#fff;border:2px solid #A8D8DC;border-radius:12px;
+  padding:.9rem .5rem;font-size:1.8rem;font-weight:700;text-align:center;
+  cursor:pointer;transition:all .18s;-webkit-tap-highlight-color:transparent;
+  display:flex;flex-direction:column;align-items:center;gap:.15rem;}
+.opt-btn span.opt-py{font-size:.65rem;font-weight:700;color:#666;}
+.opt-btn:hover:not(:disabled){border-color:#004C52;background:#E0F5F6;}
+.opt-btn.correct{background:#D4EDDA;border-color:#28a745;animation:correctPop .35s ease;}
+.opt-btn.wrong{background:#FDECEA;border-color:#dc3545;animation:wrongShake .35s ease;}
+.opt-btn:disabled{cursor:not-allowed;}
+@keyframes correctPop{0%{transform:scale(1)}50%{transform:scale(1.09)}100%{transform:scale(1)}}
+@keyframes wrongShake{0%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}100%{transform:translateX(0)}}
+.quiz-feedback{text-align:center;padding:.7rem;border-radius:10px;
+  font-weight:800;font-size:.9rem;margin-top:.8rem;min-height:44px;}
+.quiz-feedback.correct{background:#D4EDDA;color:#155724;}
+.quiz-feedback.wrong{background:#FDECEA;color:#721c24;}
+.quiz-next-wrap{text-align:center;margin-top:.8rem;}
+.btn-next{background:#C85A1E;color:#fff;border:none;border-radius:10px;
+  padding:.6rem 1.6rem;font-size:.9rem;font-weight:900;cursor:pointer;}
+.btn-next:hover{background:#a84818;}
+.quiz-scorebar{display:flex;justify-content:space-between;align-items:center;
+  background:#fff;border-radius:10px;padding:.55rem .9rem;margin-top:.8rem;
+  font-size:.78rem;font-weight:700;color:#004C52;border:1px solid #A8D8DC;}
+
+/* Sentence Builder */
+.sb-prompt{background:#fff;border:2px solid #A8D8DC;border-radius:14px;
+  padding:1rem;text-align:center;margin-bottom:1rem;}
+.sb-english{font-size:1.2rem;font-weight:900;color:#004C52;margin-bottom:.3rem;}
+.sb-hint{font-size:.72rem;color:#666;}
+.sb-drop-zone{min-height:64px;background:#E0F5F6;border-radius:12px;
+  border:2px dashed #A8D8DC;display:flex;flex-wrap:wrap;
+  align-items:center;justify-content:center;gap:.4rem;
+  padding:.5rem;margin-bottom:.9rem;}
+.sb-drop-zone.has-words{border-style:solid;border-color:#006D75;}
+.sb-word-bank{display:flex;flex-wrap:wrap;gap:.5rem;justify-content:center;margin-bottom:1rem;}
+.sb-chip{background:#004C52;color:#fff;border-radius:30px;
+  padding:.4rem .9rem;font-size:1.3rem;cursor:pointer;
+  transition:all .2s;user-select:none;-webkit-tap-highlight-color:transparent;
+  display:flex;flex-direction:column;align-items:center;}
+.sb-chip span.py{font-size:.55rem;opacity:.75;font-weight:700;}
+.sb-chip:hover{background:#006D75;transform:scale(1.05);}
+.sb-chip.used{opacity:.3;pointer-events:none;}
+.sb-placed-chip{background:#C85A1E;color:#fff;border-radius:30px;
+  padding:.4rem .9rem;font-size:1.3rem;cursor:pointer;
+  user-select:none;-webkit-tap-highlight-color:transparent;
+  display:flex;flex-direction:column;align-items:center;}
+.sb-placed-chip span.py{font-size:.55rem;opacity:.8;font-weight:700;}
+.sb-placed-chip:hover{background:#a84818;}
+.sb-actions{display:flex;gap:.7rem;justify-content:center;margin-bottom:.8rem;}
+.btn-check,.btn-clear,.btn-sb-next{border:none;border-radius:10px;
+  padding:.55rem 1.2rem;font-size:.85rem;font-weight:900;cursor:pointer;}
+.btn-check{background:#004C52;color:#fff;}
+.btn-check:hover{background:#006D75;}
+.btn-clear{background:#eee;color:#333;}
+.btn-clear:hover{background:#ddd;}
+.btn-sb-next{background:#C85A1E;color:#fff;display:none;}
+.btn-sb-next:hover{background:#a84818;}
+.sb-result{text-align:center;font-size:.9rem;font-weight:800;padding:.6rem;
+  border-radius:10px;min-height:40px;margin-bottom:.5rem;}
+.sb-result.correct{background:#D4EDDA;color:#155724;}
+.sb-result.wrong{background:#FDECEA;color:#721c24;}
+.sb-scorebar{display:flex;justify-content:space-between;background:#fff;
+  border-radius:10px;padding:.55rem .9rem;font-size:.78rem;
+  font-weight:700;color:#004C52;border:1px solid #A8D8DC;}
+
+/* Chat */
+.chat-mascot{display:flex;align-items:center;gap:.7rem;background:#fff;
+  border-radius:14px;padding:.8rem 1rem;margin-bottom:.9rem;
+  box-shadow:0 2px 8px rgba(0,0,0,.08);}
+.mascot-avatar{font-size:2.4rem;flex-shrink:0;}
+.mascot-name{font-size:.75rem;font-weight:900;color:#004C52;}
+.mascot-status{font-size:.65rem;color:#666;}
+.chat-box{background:#fff;border-radius:14px;box-shadow:0 2px 8px rgba(0,0,0,.08);
+  height:300px;overflow-y:auto;padding:.8rem;
+  display:flex;flex-direction:column;gap:.5rem;margin-bottom:.7rem;}
+.msg{max-width:82%;padding:.55rem .8rem;border-radius:14px;
+  font-size:.83rem;line-height:1.45;word-break:break-word;}
+.msg.bot{background:#E0F5F6;color:#004C52;align-self:flex-start;border-bottom-left-radius:4px;}
+.msg.user{background:#004C52;color:#fff;align-self:flex-end;border-bottom-right-radius:4px;}
+.chat-input-row{display:flex;gap:.5rem;}
+.chat-input{flex:1;border:2px solid #A8D8DC;border-radius:10px;
+  padding:.55rem .7rem;font-size:.85rem;font-family:'Nunito',sans-serif;outline:none;}
+.chat-input:focus{border-color:#004C52;}
+.btn-send{background:#004C52;color:#fff;border:none;border-radius:10px;
+  padding:.5rem .9rem;font-size:.9rem;cursor:pointer;font-weight:900;}
+.btn-send:hover{background:#006D75;}
+.btn-send:disabled{opacity:.4;cursor:not-allowed;}
+.typing-dot{display:inline-block;width:6px;height:6px;border-radius:50%;
+  background:#004C52;animation:blink 1.2s infinite;margin:0 1px;}
+.typing-dot:nth-child(2){animation-delay:.2s;}
+.typing-dot:nth-child(3){animation-delay:.4s;}
+@keyframes blink{0%,80%,100%{opacity:.15}40%{opacity:1}}
+
+/* ─── Parent Report ─── */
+.report-actions{display:flex;flex-wrap:wrap;gap:.6rem;margin-bottom:.8rem;}
+.btn-rpt{border:none;border-radius:10px;padding:.6rem 1.1rem;
+  font-size:.82rem;font-weight:900;cursor:pointer;display:flex;align-items:center;gap:.35rem;}
+.btn-print{background:#004C52;color:#fff;}
+.btn-print:hover{background:#006D75;}
+.btn-email{background:#1565C0;color:#fff;}
+.btn-email:hover{background:#0d47a1;}
+.btn-airtable{background:#18BFFF;color:#fff;}
+.btn-airtable:hover{background:#0099dd;}
+.btn-airtable:disabled{opacity:.45;cursor:not-allowed;}
+.airtable-cfg{font-size:.7rem;color:#666;padding:.4rem .7rem;
+  background:#F0FAFE;border-radius:8px;border:1px solid #A8D8DC;margin-bottom:.8rem;}
+.airtable-status{font-size:.75rem;font-weight:700;padding:.45rem .9rem;
+  border-radius:8px;display:none;margin-bottom:.6rem;}
+.airtable-status.ok{background:#D4EDDA;color:#155724;display:block;}
+.airtable-status.err{background:#FDECEA;color:#721c24;display:block;}
+
+.report-wrap{background:#fff;border-radius:16px;
+  box-shadow:0 2px 12px rgba(0,0,0,.10);overflow:hidden;}
+.report-hdr{background:linear-gradient(135deg,#004C52,#006D75);
+  color:#fff;padding:1.2rem 1.4rem;}
+.report-hdr-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:.4rem;}
+.report-logo{font-size:1.25rem;font-weight:900;}
+.report-date{font-size:.72rem;opacity:.8;}
+.report-student{font-size:1.1rem;font-weight:900;margin-bottom:.15rem;}
+.report-book{font-size:.78rem;opacity:.82;}
+.report-body{padding:1.2rem 1.4rem;}
+.rsec{margin-bottom:1.2rem;}
+.rsec-title{font-size:.7rem;font-weight:900;color:#004C52;text-transform:uppercase;
+  letter-spacing:.06em;margin-bottom:.65rem;border-bottom:2px solid #E0F5F6;padding-bottom:.3rem;}
+.rgrid{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;}
+.rstat{background:#F5F5F0;border-radius:10px;padding:.65rem .8rem;}
+.rstat-label{font-size:.65rem;font-weight:700;color:#666;margin-bottom:.2rem;}
+.rstat-value{font-size:1.15rem;font-weight:900;color:#004C52;}
+.rstat-sub{font-size:.65rem;color:#888;margin-top:.1rem;}
+.rbar-row{margin-bottom:.6rem;}
+.rbar-label{display:flex;justify-content:space-between;
+  font-size:.72rem;font-weight:700;color:#333;margin-bottom:.2rem;}
+.rbar-bg{height:10px;background:#E0F5F6;border-radius:99px;overflow:hidden;}
+.rbar-fill{height:100%;border-radius:99px;background:#006D75;transition:width .7s .1s;}
+.rbar-fill.orange{background:#C85A1E;}
+.rbar-fill.blue{background:#1565C0;}
+.rnotes{background:#FFF8F0;border:1px solid #FFD9B8;border-radius:10px;
+  padding:.85rem 1rem;font-size:.78rem;line-height:1.7;color:#444;}
+.rnotes strong{color:#C85A1E;}
+.rfooter{font-size:.65rem;color:#bbb;text-align:center;
+  padding:.5rem;border-top:1px solid #eee;margin-top:.5rem;}
+
+/* Celebration */
+.celebrate{position:fixed;inset:0;background:rgba(0,0,0,.45);
+  display:flex;align-items:center;justify-content:center;z-index:999;}
+.celebrate-box{background:#fff;border-radius:20px;padding:2rem 2.5rem;
+  text-align:center;max-width:320px;
+  animation:popIn .4s cubic-bezier(.17,.67,.35,1.4);}
+@keyframes popIn{from{transform:scale(.7)}to{transform:scale(1)}}
+.celebrate-emoji{font-size:3rem;margin-bottom:.5rem;}
+.celebrate-title{font-size:1.3rem;font-weight:900;color:#004C52;margin-bottom:.3rem;}
+.celebrate-sub{font-size:.85rem;color:#666;margin-bottom:1rem;}
+.btn-celebrate{background:#C85A1E;color:#fff;border:none;border-radius:10px;
+  padding:.6rem 1.6rem;font-size:.9rem;font-weight:900;cursor:pointer;}
+
+/* Name modal */
+.name-modal{position:fixed;inset:0;background:rgba(0,0,0,.5);
+  display:flex;align-items:center;justify-content:center;z-index:1000;}
+.name-box{background:#fff;border-radius:20px;padding:2rem;
+  max-width:320px;width:90%;text-align:center;
+  animation:popIn .4s cubic-bezier(.17,.67,.35,1.4);}
+.name-box h2{font-size:1.2rem;font-weight:900;color:#004C52;margin-bottom:.3rem;}
+.name-box p{font-size:.82rem;color:#666;margin-bottom:1rem;}
+.name-input{width:100%;border:2px solid #A8D8DC;border-radius:10px;
+  padding:.6rem .8rem;font-size:.95rem;font-family:'Nunito',sans-serif;
+  outline:none;margin-bottom:.8rem;text-align:center;}
+.name-input:focus{border-color:#004C52;}
+.name-btns{display:flex;gap:.6rem;justify-content:center;}
+.btn-name-go{background:#004C52;color:#fff;border:none;border-radius:10px;
+  padding:.6rem 1.4rem;font-size:.88rem;font-weight:900;cursor:pointer;flex:1;}
+.btn-name-skip{background:#eee;color:#555;border:none;border-radius:10px;
+  padding:.6rem 1rem;font-size:.82rem;font-weight:700;cursor:pointer;}
+
+/* Print */
+@media print{
+  body{background:#fff!important;}
+  .cm-hdr,.cm-prog,.tab-bar,.panel:not(#panel-4),.cm-footer,
+  .report-actions,.airtable-cfg,.airtable-status,
+  .name-modal,.celebrate{display:none!important;}
+  #panel-4{display:block!important;padding:0!important;}
+  .report-wrap{box-shadow:none!important;border:1px solid #ccc;}
+}
+@media(max-width:420px){
+  .cards-grid{grid-template-columns:1fr 1fr;}
+  .quiz-options{grid-template-columns:1fr 1fr;}
+  .rgrid{grid-template-columns:1fr 1fr;}
+}
+</style>
+</head>
+<body>
+<div class="cm-wrap">
+
+<div class="cm-hdr">
+  <div>
+    <h1>🐼 ChiMigo™ &nbsp;·&nbsp; Practice &nbsp;·&nbsp; Set 1 · Book 1</h1>
+    <p>Who Are You? &nbsp;·&nbsp; 你是谁？</p>
+  </div>
+  <div id="stars-display" style="font-size:.95rem;font-weight:900;color:#A8D8DC;">⭐ 0</div>
+</div>
+<div class="cm-prog"><div class="cm-prog-fill" id="overall-prog" style="width:0%"></div></div>
+
+<div class="tab-bar">
+  <div class="tab active" onclick="switchTab(0)">📚 Flashcards</div>
+  <div class="tab" onclick="switchTab(1)">🎯 Tap the Match</div>
+  <div class="tab" onclick="switchTab(2)">🧩 Build a Sentence</div>
+  <div class="tab" onclick="switchTab(3)">🤖 Ask ChiMigo</div>
+  <div class="tab" onclick="switchTab(4)">📊 Parent Report</div>
+</div>
+
+<!-- PANEL 0 – FLASHCARDS -->
+<div class="panel active" id="panel-0">
+  <div class="fc-progress" id="fc-progress">Tap each card to flip it! &nbsp; 0 / 8 reviewed</div>
+  <div class="cards-grid" id="flash-grid"></div>
+</div>
+
+<!-- PANEL 1 – QUIZ -->
+<div class="panel" id="panel-1">
+  <p class="section-title">🎯 Tap the correct Chinese word!</p>
+  <div class="quiz-prompt">
+    <div class="quiz-english" id="q-english">—</div>
+    <div class="quiz-sub">What is the Chinese word for this?</div>
+  </div>
+  <div class="quiz-options" id="q-options"></div>
+  <div class="quiz-feedback" id="q-feedback"></div>
+  <div class="quiz-next-wrap" id="q-next-wrap" style="display:none">
+    <button class="btn-next" onclick="nextQuestion()">Next ➜</button>
+  </div>
+  <div class="quiz-scorebar">
+    <span id="q-score-left">Questions: 0</span>
+    <span id="q-score-right">Correct: 0 (—%)</span>
+  </div>
+</div>
+
+<!-- PANEL 2 – SENTENCE BUILDER -->
+<div class="panel" id="panel-2">
+  <p class="section-title">🧩 Tap words to build the sentence!</p>
+  <div class="sb-prompt">
+    <div class="sb-english" id="sb-english">—</div>
+    <div class="sb-hint" id="sb-hint"></div>
+  </div>
+  <div class="sb-drop-zone" id="sb-drop"></div>
+  <div class="sb-word-bank" id="sb-bank"></div>
+  <div class="sb-actions">
+    <button class="btn-check" onclick="checkSentence()">✓ Check</button>
+    <button class="btn-clear" onclick="clearSentence()">✗ Clear</button>
+    <button class="btn-sb-next" id="btn-sb-next" onclick="nextSentence()">Next ➜</button>
+  </div>
+  <div class="sb-result" id="sb-result"></div>
+  <div class="sb-scorebar">
+    <span id="sb-score-left">Sentence 1 of 5</span>
+    <span id="sb-score-right">Correct: 0 / 0</span>
+  </div>
+</div>
+
+<!-- PANEL 3 – ASK CHIMIGO -->
+<div class="panel" id="panel-3">
+  <div class="chat-mascot">
+    <div class="mascot-avatar">🐼</div>
+    <div>
+      <div class="mascot-name">ChiMigo</div>
+      <div class="mascot-status">Your Chinese Learning Friend ✨</div>
+    </div>
+  </div>
+  <div class="chat-box" id="chat-box"></div>
+  <div class="chat-input-row">
+    <input class="chat-input" id="chat-input" type="text"
+      placeholder="Ask me anything about this book…"
+      onkeydown="if(event.key==='Enter')sendChat()">
+    <button class="btn-send" id="btn-send" onclick="sendChat()">➤</button>
+  </div>
+</div>
+
+<!-- PANEL 4 – PARENT REPORT -->
+<div class="panel" id="panel-4">
+
+  <div class="report-actions">
+    <button class="btn-rpt btn-print" onclick="window.print()">🖨️ Print / Save PDF</button>
+    <button class="btn-rpt btn-email" onclick="emailReport()">✉️ Email to Parent</button>
+    <button class="btn-rpt btn-airtable" id="btn-airtable" onclick="saveToAirtable()">☁️ Save to Airtable</button>
+  </div>
+  <div class="airtable-cfg" id="airtable-cfg">
+    ⚙️ <strong>Airtable:</strong> Set <code>AIRTABLE_TOKEN</code> and <code>AIRTABLE_BASE_ID</code> in the script to enable cloud saving.
+  </div>
+  <div class="airtable-status" id="airtable-status"></div>
+
+  <div class="report-wrap" id="report-card">
+    <div class="report-hdr">
+      <div class="report-hdr-top">
+        <div class="report-logo">🐼 ChiMigo™</div>
+        <div class="report-date" id="rpt-date">—</div>
+      </div>
+      <div class="report-student" id="rpt-student">Student: —</div>
+      <div class="report-book">Project 1 · Set 1 · Book 1 &nbsp;·&nbsp; <em>Who Are You? (你是谁？)</em></div>
+    </div>
+    <div class="report-body">
+
+      <div class="rsec">
+        <div class="rsec-title">📊 Session Summary</div>
+        <div class="rgrid">
+          <div class="rstat"><div class="rstat-label">Total Practice Time</div><div class="rstat-value" id="rpt-time">—</div><div class="rstat-sub">active time in session</div></div>
+          <div class="rstat"><div class="rstat-label">Stars Earned</div><div class="rstat-value" id="rpt-stars">0 ⭐</div><div class="rstat-sub">out of 46 possible</div></div>
+          <div class="rstat"><div class="rstat-label">Activities Tried</div><div class="rstat-value" id="rpt-acts">0 / 3</div><div class="rstat-sub">flashcards, quiz, builder</div></div>
+          <div class="rstat"><div class="rstat-label">Overall Score</div><div class="rstat-value" id="rpt-overall">—</div><div class="rstat-sub">quiz + sentence builder</div></div>
+        </div>
+      </div>
+
+      <div class="rsec">
+        <div class="rsec-title">📚 Flashcards</div>
+        <div class="rbar-row">
+          <div class="rbar-label"><span>Cards Reviewed</span><span id="rpt-fc-label">0 / 8</span></div>
+          <div class="rbar-bg"><div class="rbar-fill" id="rpt-fc-bar" style="width:0%"></div></div>
+        </div>
+        <div class="rbar-row">
+          <div class="rbar-label"><span>Time Spent</span><span id="rpt-fc-time">—</span></div>
+          <div class="rbar-bg"><div class="rbar-fill blue" id="rpt-fc-tbar" style="width:0%"></div></div>
+        </div>
+      </div>
+
+      <div class="rsec">
+        <div class="rsec-title">🎯 Vocabulary Quiz</div>
+        <div class="rbar-row">
+          <div class="rbar-label"><span>Accuracy</span><span id="rpt-qz-pct">—</span></div>
+          <div class="rbar-bg"><div class="rbar-fill orange" id="rpt-qz-bar" style="width:0%"></div></div>
+        </div>
+        <div class="rgrid" style="margin-top:.5rem">
+          <div class="rstat"><div class="rstat-label">Questions</div><div class="rstat-value" id="rpt-qz-total">0</div></div>
+          <div class="rstat"><div class="rstat-label">Correct</div><div class="rstat-value" id="rpt-qz-correct">0</div></div>
+          <div class="rstat"><div class="rstat-label">Time Spent</div><div class="rstat-value" id="rpt-qz-time">—</div></div>
+          <div class="rstat"><div class="rstat-label">Rounds</div><div class="rstat-value" id="rpt-qz-rounds">0</div></div>
+        </div>
+      </div>
+
+      <div class="rsec">
+        <div class="rsec-title">🧩 Sentence Builder</div>
+        <div class="rbar-row">
+          <div class="rbar-label"><span>Sentences Correct</span><span id="rpt-sb-label">0 / 5</span></div>
+          <div class="rbar-bg"><div class="rbar-fill" id="rpt-sb-bar" style="width:0%"></div></div>
+        </div>
+        <div class="rgrid" style="margin-top:.5rem">
+          <div class="rstat"><div class="rstat-label">Attempted</div><div class="rstat-value" id="rpt-sb-attempted">0</div></div>
+          <div class="rstat"><div class="rstat-label">Correct</div><div class="rstat-value" id="rpt-sb-correct">0</div></div>
+          <div class="rstat"><div class="rstat-label">Time Spent</div><div class="rstat-value" id="rpt-sb-time">—</div></div>
+          <div class="rstat"><div class="rstat-label">Accuracy</div><div class="rstat-value" id="rpt-sb-pct">—</div></div>
+        </div>
+      </div>
+
+      <div class="rsec">
+        <div class="rsec-title">📝 Notes for Parents</div>
+        <div class="rnotes" id="rpt-notes">Complete at least one activity to generate personalized notes!</div>
+      </div>
+
+      <div class="rfooter">Generated by ChiMigo™ · chiwonder.com · ACTFL-aligned Mandarin Chinese curriculum</div>
+    </div>
+  </div>
+</div>
+
+<div class="cm-footer">
+  <strong>ChiMigo™</strong> &nbsp;·&nbsp;
+  <a href="https://chiwonder.com" target="_blank">chiwonder.com</a>
+  &nbsp;·&nbsp; All rights reserved
+</div>
+</div>
+
+<!-- Celebration -->
+<div class="celebrate" id="celebrate" style="display:none" onclick="closeCelebrate()">
+  <div class="celebrate-box" onclick="event.stopPropagation()">
+    <div class="celebrate-emoji" id="cel-emoji">🎉</div>
+    <div class="celebrate-title" id="cel-title">Great job!</div>
+    <div class="celebrate-sub" id="cel-sub"></div>
+    <button class="btn-celebrate" onclick="closeCelebrate()">Keep Going! 🚀</button>
+  </div>
+</div>
+
+<!-- Name modal -->
+<div class="name-modal" id="name-modal">
+  <div class="name-box">
+    <div style="font-size:2.2rem;margin-bottom:.5rem">🐼</div>
+    <h2>Welcome to ChiMigo!</h2>
+    <p>What's your name? We'll put it on your practice report.</p>
+    <input class="name-input" id="name-input" type="text"
+      placeholder="Student name…" maxlength="40"
+      onkeydown="if(event.key==='Enter')confirmName()">
+    <div class="name-btns">
+      <button class="btn-name-go" onclick="confirmName()">Let's Go! 🚀</button>
+      <button class="btn-name-skip" onclick="skipName()">Skip</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ═══════════════════════════════════
+   ⚙️ AIRTABLE CONFIG
+   Fill in to enable cloud saving.
+═══════════════════════════════════ */
+const AIRTABLE_TOKEN   = '';     // Your Airtable personal access token
+const AIRTABLE_BASE_ID = '';     // e.g. appXXXXXXXXXXXXXX
+const AIRTABLE_TABLE   = 'ChiMigo Practice Reports';
+
+/* ═══════════════════════════════════
+   DATA
+═══════════════════════════════════ */
+const VOCAB=[
+  {zh:'你',  py:'nǐ',      ph:'(nee3)',       en:'you',           tip:'The person you talk to'},
+  {zh:'是',  py:'shì',     ph:'(shr4)',       en:'is / am / are', tip:'The verb "to be"'},
+  {zh:'谁',  py:'shuí',    ph:'(shwey2)',     en:'who',           tip:'Question word for a person'},
+  {zh:'我',  py:'wǒ',      ph:'(woh3)',       en:'I / me',        tip:'Talking about yourself'},
+  {zh:'他',  py:'tā',      ph:'(tah1)',       en:'he / him',      tip:'A boy or man'},
+  {zh:'他们',py:'tā men',  ph:'(tah1 men)',   en:'they',          tip:'们 makes it plural'},
+  {zh:'我的',py:'wǒ de',   ph:'(woh3 der5)', en:'my',            tip:'的 = possessive marker'},
+  {zh:'家人',py:'jiā rén', ph:'(jyah1 ren2)', en:'family',        tip:'家=home, 人=person'},
+];
+const SENTENCES=[
+  {en:'Who are you?',        words:['你','是','谁','？'],           py:['nǐ','shì','shuí','？']},
+  {en:'I am Tom.',           words:['我','是','Tom','。'],          py:['wǒ','shì','Tom','。']},
+  {en:'Who is he?',          words:['他','是','谁','？'],           py:['tā','shì','shuí','？']},
+  {en:'He is Eric.',         words:['他','是','Eric','。'],         py:['tā','shì','Eric','。']},
+  {en:'They are my family.', words:['他们','是','我的','家人','。'],py:['tā men','shì','wǒ de','jiā rén','。']},
+];
+
+/* ═══════════════════════════════════
+   STATE
+═══════════════════════════════════ */
+let studentName='',stars=0,activeTab=0;
+let flashedCards=new Set();
+let fcStartTime=null,fcTotalSec=0;
+let quizOrder=[],quizIdx=0,quizCorrect=0,quizTotal=0,quizRounds=0,quizLocked=false;
+let qzStartTime=null,qzTotalSec=0;
+let sbIdx=0,sbPlaced=[],sbAnswered=false,sbAttempted=0,sbCorrect=0;
+let sbStartTime=null,sbTotalSec=0;
+let chatHistory=[];
+
+/* ═══════════════════════════════════
+   UTILS
+═══════════════════════════════════ */
+function speak(t,l='zh-CN'){if(!window.speechSynthesis)return;const u=new SpeechSynthesisUtterance(t);u.lang=l;u.rate=.85;speechSynthesis.cancel();speechSynthesis.speak(u);}
+function fmtMin(s){return s<60?'<1 min':Math.round(s/60)+' min';}
+function pct(a,b){return b===0?'—':Math.round(a/b*100)+'%';}
+function shuffle(a){return[...a].sort(()=>Math.random()-.5);}
+function addStar(n=1){stars+=n;document.getElementById('stars-display').textContent='⭐ '+stars;document.getElementById('overall-prog').style.width=Math.min(100,Math.round(stars/46*100))+'%';}
+function showCelebrate(e,t,s){document.getElementById('cel-emoji').textContent=e;document.getElementById('cel-title').textContent=t;document.getElementById('cel-sub').textContent=s;document.getElementById('celebrate').style.display='flex';}
+function closeCelebrate(){document.getElementById('celebrate').style.display='none';}
+
+/* ═══════════════════════════════════
+   NAME MODAL
+═══════════════════════════════════ */
+window.addEventListener('load',()=>{
+  document.getElementById('name-modal').style.display='flex';
+  document.getElementById('name-input').focus();
+  const hasAirtable=AIRTABLE_TOKEN&&AIRTABLE_BASE_ID;
+  document.getElementById('btn-airtable').disabled=!hasAirtable;
+  if(hasAirtable)document.getElementById('airtable-cfg').style.display='none';
+});
+function confirmName(){studentName=document.getElementById('name-input').value.trim()||'Student';document.getElementById('name-modal').style.display='none';}
+function skipName(){studentName='Student';document.getElementById('name-modal').style.display='none';}
+
+/* ═══════════════════════════════════
+   TAB + TIMER
+═══════════════════════════════════ */
+function stopTimer(){const n=Date.now();if(activeTab===0&&fcStartTime){fcTotalSec+=Math.round((n-fcStartTime)/1000);fcStartTime=null;}if(activeTab===1&&qzStartTime){qzTotalSec+=Math.round((n-qzStartTime)/1000);qzStartTime=null;}if(activeTab===2&&sbStartTime){sbTotalSec+=Math.round((n-sbStartTime)/1000);sbStartTime=null;}}
+function startTimer(n){const t=Date.now();if(n===0)fcStartTime=t;if(n===1)qzStartTime=t;if(n===2)sbStartTime=t;}
+function switchTab(n){
+  stopTimer();
+  document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',i===n));
+  document.querySelectorAll('.panel').forEach((p,i)=>p.classList.toggle('active',i===n));
+  activeTab=n;startTimer(n);
+  if(n===1&&quizTotal===0)initQuiz();
+  if(n===2&&sbAttempted===0&&!sbPlaced.length)loadSentence();
+  if(n===3&&!chatHistory.length)initChat();
+  if(n===4)buildReport();
+}
+fcStartTime=Date.now();
+
+/* ═══════════════════════════════════
+   FLASHCARDS
+═══════════════════════════════════ */
+(function(){
+  const g=document.getElementById('flash-grid');
+  VOCAB.forEach((v,i)=>{
+    g.innerHTML+=`<div class="flash-card" id="fc${i}" onclick="flipCard(${i})">
+      <div class="flash-inner">
+        <div class="flash-front">
+          <div class="flash-zh">${v.zh}</div>
+          <div class="flash-py">${v.py} ${v.ph}</div>
+          <div class="flash-hint">tap to flip</div>
+          <button class="flash-speak" onclick="event.stopPropagation();speak('${v.zh}')">🔊</button>
+        </div>
+        <div class="flash-back">
+          <div class="flash-en">${v.en}</div>
+          <div class="flash-py" style="color:#C85A1E">${v.py}</div>
+          <div class="flash-tip">${v.tip}</div>
+          <button class="flash-speak" onclick="event.stopPropagation();speak('${v.zh}')">🔊</button>
+        </div>
+      </div></div>`;
+  });
+})();
+function flipCard(i){
+  const c=document.getElementById('fc'+i);
+  const was=c.classList.contains('flipped');
+  c.classList.toggle('flipped');
+  if(!was&&!flashedCards.has(i)){
+    flashedCards.add(i);speak(VOCAB[i].zh);addStar(1);
+    document.getElementById('fc-progress').textContent='Tap each card to flip it!  '+flashedCards.size+' / '+VOCAB.length+' reviewed';
+    if(flashedCards.size===VOCAB.length)setTimeout(()=>showCelebrate('🌟','All 8 cards done!','You reviewed every vocabulary word! +8 stars'),500);
+  }
+}
+
+/* ═══════════════════════════════════
+   QUIZ
+═══════════════════════════════════ */
+function initQuiz(){quizOrder=shuffle(VOCAB.map((_,i)=>i));quizIdx=0;loadQuestion();}
+function updateQScore(){document.getElementById('q-score-left').textContent='Questions: '+quizTotal;document.getElementById('q-score-right').textContent='Correct: '+quizCorrect+' ('+pct(quizCorrect,quizTotal)+')';}
+function loadQuestion(){
+  if(quizIdx>=quizOrder.length){quizOrder=shuffle(VOCAB.map((_,i)=>i));quizIdx=0;quizRounds++;}
+  const correct=VOCAB[quizOrder[quizIdx]];
+  const opts=shuffle([correct,...shuffle(VOCAB.filter(v=>v.zh!==correct.zh)).slice(0,3)]);
+  document.getElementById('q-english').textContent=correct.en;
+  document.getElementById('q-feedback').textContent='';
+  document.getElementById('q-feedback').className='quiz-feedback';
+  document.getElementById('q-next-wrap').style.display='none';
+  const w=document.getElementById('q-options');w.innerHTML='';
+  opts.forEach(o=>{const b=document.createElement('button');b.className='opt-btn';b.innerHTML=o.zh+'<span class="opt-py">'+o.py+'</span>';b.onclick=()=>answerQ(o.zh===correct.zh,b,correct);w.appendChild(b);});
+  quizLocked=false;
+}
+function answerQ(ok,btn,correct){
+  if(quizLocked)return;quizLocked=true;quizTotal++;speak(correct.zh);
+  const fb=document.getElementById('q-feedback');
+  if(ok){btn.classList.add('correct');fb.textContent='✅ Correct! '+correct.zh+' = '+correct.en;fb.className='quiz-feedback correct';quizCorrect++;addStar(2);}
+  else{btn.classList.add('wrong');fb.textContent='❌ It\'s '+correct.zh+' ('+correct.py+') = '+correct.en;fb.className='quiz-feedback wrong';document.querySelectorAll('.opt-btn').forEach(b=>{if(b.textContent.trim().startsWith(correct.zh))b.classList.add('correct');});}
+  document.getElementById('q-next-wrap').style.display='block';updateQScore();
+  if(quizTotal%8===0&&quizCorrect/quizTotal>=.75)setTimeout(()=>showCelebrate('🎯','Quiz master!',quizCorrect+'/'+quizTotal+' correct!'),600);
+}
+function nextQuestion(){quizIdx++;loadQuestion();}
+
+/* ═══════════════════════════════════
+   SENTENCE BUILDER
+═══════════════════════════════════ */
+function loadSentence(){
+  if(sbIdx>=SENTENCES.length)sbIdx=0;
+  const s=SENTENCES[sbIdx];sbPlaced=[];sbAnswered=false;
+  document.getElementById('sb-english').textContent=s.en;
+  document.getElementById('sb-hint').textContent='Put the words in the right order 👇';
+  document.getElementById('sb-result').textContent='';
+  document.getElementById('sb-result').className='sb-result';
+  document.getElementById('btn-sb-next').style.display='none';
+  document.getElementById('sb-score-left').textContent='Sentence '+(sbIdx+1)+' of '+SENTENCES.length;
+  document.getElementById('sb-score-right').textContent='Correct: '+sbCorrect+' / '+sbAttempted;
+  const bank=document.getElementById('sb-bank');bank.innerHTML='';
+  shuffle(s.words.filter(w=>w!=='？'&&w!=='。')).forEach((w,i)=>{
+    const pi=s.words.indexOf(w);
+    const chip=document.createElement('div');chip.className='sb-chip';chip.id='bank-'+i;
+    chip.dataset.word=w;chip.dataset.bi=i;
+    chip.innerHTML=w+'<span class="py">'+(s.py[pi]||'')+'</span>';
+    chip.onclick=()=>placeWord(chip);bank.appendChild(chip);
+  });
+  renderDrop();
+}
+function renderDrop(){
+  const d=document.getElementById('sb-drop');d.innerHTML='';
+  d.className='sb-drop-zone'+(sbPlaced.length?' has-words':'');
+  if(!sbPlaced.length){d.innerHTML='<span style="color:#888;font-size:.78rem">Your sentence appears here…</span>';return;}
+  sbPlaced.forEach((item,pi)=>{const c=document.createElement('div');c.className='sb-placed-chip';c.innerHTML=item.w+'<span class="py">'+item.py+'</span>';c.onclick=()=>removeWord(pi);d.appendChild(c);});
+}
+function placeWord(chip){
+  if(sbAnswered||chip.classList.contains('used'))return;
+  chip.classList.add('used');
+  const w=chip.dataset.word,s=SENTENCES[sbIdx],pi=s.words.indexOf(w);
+  sbPlaced.push({w,py:s.py[pi]||'',bi:parseInt(chip.dataset.bi)});renderDrop();
+}
+function removeWord(pi){
+  if(sbAnswered)return;
+  const item=sbPlaced.splice(pi,1)[0];
+  const c=document.getElementById('bank-'+item.bi);if(c)c.classList.remove('used');renderDrop();
+}
+function clearSentence(){if(sbAnswered)return;document.querySelectorAll('.sb-chip').forEach(c=>c.classList.remove('used'));sbPlaced=[];renderDrop();}
+function checkSentence(){
+  if(sbAnswered||!sbPlaced.length)return;sbAnswered=true;sbAttempted++;
+  const s=SENTENCES[sbIdx],correct=s.words.filter(w=>w!=='？'&&w!=='。');
+  const ok=JSON.stringify(sbPlaced.map(i=>i.w))===JSON.stringify(correct);
+  const res=document.getElementById('sb-result');
+  if(ok){res.textContent='✅ 太棒了！ Excellent!';res.className='sb-result correct';sbCorrect++;addStar(3);speak(correct.join(''));}
+  else{res.textContent='❌ Correct order: '+correct.join(' ');res.className='sb-result wrong';speak(correct.join(''));}
+  document.getElementById('sb-score-right').textContent='Correct: '+sbCorrect+' / '+sbAttempted;
+  document.getElementById('btn-sb-next').style.display='inline-block';
+  if(sbIdx===SENTENCES.length-1&&ok)setTimeout(()=>showCelebrate('🏆','All 5 sentences!','You built every sentence correctly!'),600);
+}
+function nextSentence(){sbIdx++;loadSentence();}
+
+/* ═══════════════════════════════════
+   CHIMIGO CHAT
+═══════════════════════════════════ */
+const SYS=`You are ChiMigo, a warm, encouraging Chinese tutor for young learners (ages 3-8). Book 1: "Who Are You?" (你是谁？). Vocab: 你(nǐ)=you, 是(shì)=is/am/are, 谁(shuí)=who, 我(wǒ)=I, 他(tā)=he, 他们(tā men)=they, 我的(wǒ de)=my, 家人(jiā rén)=family. Be short (2-4 sentences), fun, use emojis, phonetics like (nee3). Say 太棒了！加油！often.`;
+function addBotMsg(t){const b=document.getElementById('chat-box');const m=document.createElement('div');m.className='msg bot';m.textContent=t;b.appendChild(m);b.scrollTop=b.scrollHeight;}
+function addUserMsg(t){const b=document.getElementById('chat-box');const m=document.createElement('div');m.className='msg user';m.textContent=t;b.appendChild(m);b.scrollTop=b.scrollHeight;}
+function addTyping(){const b=document.getElementById('chat-box');const t=document.createElement('div');t.className='msg bot';t.id='typing';t.innerHTML='<span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span>';b.appendChild(t);b.scrollTop=b.scrollHeight;return t;}
+function initChat(){addBotMsg("Hi! I'm ChiMigo! 🐼 Let's practice Book 1 — Who Are You? (你是谁？)\n\nAsk me:\n• How do I say 'who are you'?\n• What does 他们 mean?\n• Quiz me!\n\n加油！🌟");}
+async function sendChat(){
+  const inp=document.getElementById('chat-input');const txt=inp.value.trim();if(!txt)return;
+  inp.value='';addUserMsg(txt);chatHistory.push({role:'user',content:txt});
+  document.getElementById('btn-send').disabled=true;const typing=addTyping();
+  try{
+    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:350,system:SYS,messages:chatHistory})});
+    const data=await res.json();
+    const reply=(data.content||[]).map(b=>b.type==='text'?b.text:'').join('')||'Oops! Try again? 🐼';
+    typing.remove();addBotMsg(reply);chatHistory.push({role:'assistant',content:reply});addStar(1);
+  }catch(e){typing.remove();addBotMsg('Oops! Couldn\'t connect. Try again soon! 🐼');}
+  document.getElementById('btn-send').disabled=false;
+}
+
+/* ═══════════════════════════════════
+   PARENT REPORT
+═══════════════════════════════════ */
+function getLiveTimes(){
+  const n=Date.now();
+  let fc=fcTotalSec,qz=qzTotalSec,sb=sbTotalSec;
+  if(activeTab===0&&fcStartTime)fc+=Math.round((n-fcStartTime)/1000);
+  if(activeTab===1&&qzStartTime)qz+=Math.round((n-qzStartTime)/1000);
+  if(activeTab===2&&sbStartTime)sb+=Math.round((n-sbStartTime)/1000);
+  return{fc,qz,sb};
+}
+function buildReport(){
+  const{fc,qz,sb}=getLiveTimes(),total=fc+qz+sb;
+  const dateStr=new Date().toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+  document.getElementById('rpt-date').textContent=dateStr;
+  document.getElementById('rpt-student').textContent='Student: '+(studentName||'—');
+  document.getElementById('rpt-time').textContent=total<60?'<1 min':fmtMin(total);
+  document.getElementById('rpt-stars').textContent=stars+' ⭐';
+  const acts=[flashedCards.size>0,quizTotal>0,sbAttempted>0].filter(Boolean).length;
+  document.getElementById('rpt-acts').textContent=acts+' / 3';
+  const tq=quizTotal+sbAttempted,tc=quizCorrect+sbCorrect;
+  document.getElementById('rpt-overall').textContent=tq>0?pct(tc,tq):'—';
+  // Flashcards
+  const fcP=Math.round(flashedCards.size/VOCAB.length*100);
+  document.getElementById('rpt-fc-label').textContent=flashedCards.size+' / '+VOCAB.length;
+  document.getElementById('rpt-fc-bar').style.width=fcP+'%';
+  document.getElementById('rpt-fc-time').textContent=fc>0?fmtMin(fc):'—';
+  const mx=Math.max(fc,qz,sb,1);
+  document.getElementById('rpt-fc-tbar').style.width=Math.round(fc/mx*100)+'%';
+  // Quiz
+  const qzP=quizTotal>0?Math.round(quizCorrect/quizTotal*100):0;
+  document.getElementById('rpt-qz-pct').textContent=quizTotal>0?qzP+'%':'—';
+  document.getElementById('rpt-qz-bar').style.width=qzP+'%';
+  document.getElementById('rpt-qz-total').textContent=quizTotal;
+  document.getElementById('rpt-qz-correct').textContent=quizCorrect;
+  document.getElementById('rpt-qz-time').textContent=qz>0?fmtMin(qz):'—';
+  document.getElementById('rpt-qz-rounds').textContent=quizRounds||(quizTotal>0?1:0);
+  // Sentence builder
+  const sbP=sbAttempted>0?Math.round(sbCorrect/sbAttempted*100):0;
+  document.getElementById('rpt-sb-label').textContent=sbCorrect+' / '+SENTENCES.length;
+  document.getElementById('rpt-sb-bar').style.width=Math.round(sbCorrect/SENTENCES.length*100)+'%';
+  document.getElementById('rpt-sb-attempted').textContent=sbAttempted;
+  document.getElementById('rpt-sb-correct').textContent=sbCorrect;
+  document.getElementById('rpt-sb-time').textContent=sb>0?fmtMin(sb):'—';
+  document.getElementById('rpt-sb-pct').textContent=sbAttempted>0?sbP+'%':'—';
+  // Notes
+  document.getElementById('rpt-notes').innerHTML=genNotes(fcP,qzP,sbP,total);
+}
+
+function genNotes(fcP,qzP,sbP,totalSec){
+  const n=studentName||'Your student';let notes='';
+  if(fcP===100)notes+=`<strong>${n}</strong> reviewed all 8 vocabulary words. ✅ `;
+  else if(fcP>0)notes+=`<strong>${n}</strong> reviewed ${flashedCards.size}/8 vocabulary cards. Try revisiting the rest together. `;
+  else notes+=`Flashcards weren't started. Try them first — they introduce all the vocabulary! `;
+  if(quizTotal===0)notes+=`The vocabulary quiz wasn't attempted this session. `;
+  else if(qzP>=80)notes+=`Quiz accuracy: <strong>${qzP}%</strong> — excellent character recognition! 🌟 `;
+  else if(qzP>=60)notes+=`Quiz accuracy: <strong>${qzP}%</strong> — good progress! Practice saying words aloud at home. `;
+  else notes+=`Quiz accuracy: <strong>${qzP}%</strong> — keep practicing! Try pointing at flashcards and asking "${n}, what does this say?" `;
+  if(sbAttempted===0)notes+=`Sentence builder wasn't attempted.`;
+  else if(sbP===100)notes+=`Sentence builder: <strong>100%</strong>! Try asking 你是谁？at dinner and see if ${n} answers with 我是___。🎉`;
+  else notes+=`Sentence builder: <strong>${sbCorrect}/${sbAttempted}</strong> correct. Practice 你是谁？/ 我是___. together at home.`;
+  if(totalSec>=60)notes+=`<br><br>⏱️ Total practice time: <strong>${fmtMin(totalSec)}</strong>.`;
+  return notes;
+}
+
+function emailReport(){
+  const{fc,qz,sb}=getLiveTimes(),total=fc+qz+sb;
+  const name=studentName||'Student',date=new Date().toLocaleDateString('en-US');
+  const qzP=quizTotal>0?Math.round(quizCorrect/quizTotal*100):0;
+  const sbP=sbAttempted>0?Math.round(sbCorrect/sbAttempted*100):0;
+  const body=`ChiMigo™ Practice Report
+Student: ${name}    Date: ${date}
+Book: Project 1 · Set 1 · Book 1 — Who Are You? (你是谁？)
+
+SESSION SUMMARY
+Total Time: ${fmtMin(total)}    Stars: ${stars} / 46
+
+FLASHCARDS
+Reviewed: ${flashedCards.size} / ${VOCAB.length}    Time: ${fmtMin(fc)}
+
+VOCABULARY QUIZ
+Questions: ${quizTotal}    Correct: ${quizCorrect}    Accuracy: ${qzP}%    Time: ${fmtMin(qz)}
+
+SENTENCE BUILDER
+Attempted: ${sbAttempted}    Correct: ${sbCorrect}    Accuracy: ${sbP}%    Time: ${fmtMin(sb)}
+
+---
+ChiMigo™ · chiwonder.com`;
+  window.location.href='mailto:?subject='+encodeURIComponent(`ChiMigo Report — ${name} — ${date}`)+'&body='+encodeURIComponent(body);
+}
+
+async function saveToAirtable(){
+  if(!AIRTABLE_TOKEN||!AIRTABLE_BASE_ID)return;
+  const btn=document.getElementById('btn-airtable'),st=document.getElementById('airtable-status');
+  btn.disabled=true;btn.textContent='Saving…';
+  const{fc,qz,sb}=getLiveTimes();
+  const rec={fields:{
+    'Student Name':studentName||'Student',
+    'Date':new Date().toISOString().split('T')[0],
+    'Book':'P1S1B1 – Who Are You?',
+    'Flashcards Reviewed':flashedCards.size,
+    'Flashcards Total':VOCAB.length,
+    'Quiz Questions':quizTotal,
+    'Quiz Correct':quizCorrect,
+    'Quiz Accuracy %':quizTotal>0?Math.round(quizCorrect/quizTotal*100):0,
+    'Sentences Attempted':sbAttempted,
+    'Sentences Correct':sbCorrect,
+    'Time Flashcards (min)':Math.round(fc/60),
+    'Time Quiz (min)':Math.round(qz/60),
+    'Time Builder (min)':Math.round(sb/60),
+    'Total Time (min)':Math.round((fc+qz+sb)/60),
+    'Stars Earned':stars,
+  }};
+  try{
+    const res=await fetch(`https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${encodeURIComponent(AIRTABLE_TABLE)}`,{
+      method:'POST',headers:{'Authorization':'Bearer '+AIRTABLE_TOKEN,'Content-Type':'application/json'},
+      body:JSON.stringify(rec)
+    });
+    if(res.ok){st.textContent='✅ Saved to Airtable!';st.className='airtable-status ok';btn.textContent='☁️ Saved!';}
+    else{const e=await res.json();st.textContent='❌ '+(e.error?.message||'Airtable error '+res.status);st.className='airtable-status err';btn.textContent='☁️ Save to Airtable';btn.disabled=false;}
+  }catch(e){st.textContent='❌ Network error. Check your token.';st.className='airtable-status err';btn.textContent='☁️ Save to Airtable';btn.disabled=false;}
+}
+</script>
+</body>
+</html>

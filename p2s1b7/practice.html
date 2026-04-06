@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>P2 S1 B7 Practice — Adjectives (3): Expand Descriptions, Build Variety</title>
+<!-- GitHub: rename to practice.html → chimigo-books/p2s1b7/ -->
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f0f4f4;min-height:100vh;}
+#modal{position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:999;display:flex;align-items:center;justify-content:center;}
+.modal-box{background:#fff;border-radius:20px;padding:36px 32px;max-width:380px;width:90%;text-align:center;box-shadow:0 8px 40px rgba(0,0,0,0.2);}
+.modal-box h2{font-size:1.5rem;color:#1a5c5c;margin-bottom:8px;}
+.modal-box p{color:#555;font-size:0.92rem;margin-bottom:18px;line-height:1.5;}
+.modal-box input{width:100%;padding:12px 14px;border:2px solid #1a5c5c;border-radius:10px;font-size:1rem;outline:none;margin-bottom:14px;}
+.modal-box input:focus{border-color:#C85A1E;}
+.modal-btn{background:#1a5c5c;color:#fff;border:none;padding:12px 28px;border-radius:10px;font-size:1rem;font-weight:800;cursor:pointer;width:100%;margin-bottom:8px;}
+.modal-btn:hover{background:#145050;}
+.skip-btn{background:none;border:none;color:#999;font-size:0.85rem;cursor:pointer;text-decoration:underline;}
+.hdr{background:#1a5c5c;padding:10px 16px 8px;color:#fff;position:relative;}
+.hdr .meta{font-size:0.68rem;color:#9fd4d4;letter-spacing:1px;}
+.hdr .title{font-size:1.05rem;font-weight:800;line-height:1.2;margin:2px 0;}
+.hdr .sub{font-size:0.78rem;font-style:italic;color:#f0c060;}
+.hdr .score-badge{position:absolute;top:10px;right:14px;font-size:0.85rem;font-weight:800;color:#f0c060;}
+.back-link{display:block;text-align:center;padding:6px;background:#145050;color:#9fd4d4;text-decoration:none;font-size:0.78rem;font-weight:700;}
+.back-link:hover{background:#0f3d3d;}
+.tabs{display:flex;background:#0f3d3d;overflow-x:auto;}
+.tab-btn{flex:1;min-width:80px;padding:10px 6px;border:none;background:none;color:#9fd4d4;font-size:0.72rem;font-weight:700;cursor:pointer;border-bottom:3px solid transparent;white-space:nowrap;}
+.tab-btn.active{color:#fff;border-bottom-color:#C85A1E;background:#1a5c5c;}
+.tab-btn:hover{background:#1a5c5c;}
+.tab-pane{display:none;padding:16px;}
+.tab-pane.active{display:block;}
+/* v4 audio button CSS */
+.btn-en{display:inline-flex;align-items:center;justify-content:center;width:34px;height:38px;background:#1565C0;border-radius:50% 50% 8px 8px/55% 55% 8px 8px;border:none;cursor:pointer;color:#fff;font-weight:800;font-size:0.68rem;vertical-align:middle;}
+.btn-zh{display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;background:#C85A1E;border-radius:10px;border:none;cursor:pointer;color:#fff;font-weight:800;font-size:0.68rem;vertical-align:middle;}
+/* Flashcards */
+.fc-progress{text-align:center;margin-bottom:8px;font-size:0.82rem;color:#1a5c5c;font-weight:700;}
+.fc-bar-wrap{height:6px;background:#e0f0f0;border-radius:3px;margin-bottom:14px;}
+.fc-bar-fill{height:100%;background:#1a5c5c;border-radius:3px;transition:width 0.4s;}
+.cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:12px;}
+.card-wrap{perspective:600px;cursor:pointer;height:130px;}
+.card-inner{position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform 0.45s;border-radius:14px;}
+.card-wrap.flipped .card-inner{transform:rotateY(180deg);}
+.card-front,.card-back{position:absolute;inset:0;border-radius:14px;backface-visibility:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:10px;}
+.card-front{background:#1a5c5c;color:#fff;}
+.card-back{background:#fff;border:2px solid #1a5c5c;transform:rotateY(180deg);}
+.card-zh{font-size:1.9rem;font-weight:900;line-height:1;text-align:center;}
+.card-py{font-size:0.62rem;color:#9fd4d4;margin-top:4px;text-align:center;line-height:1.3;}
+.card-hint{font-size:0.58rem;color:#7bbaba;margin-top:3px;}
+.card-spk{position:absolute;bottom:6px;right:6px;}
+.card-back .card-en{font-size:0.85rem;font-weight:700;color:#1a5c5c;text-align:center;}
+.card-back .card-py2{font-size:0.66rem;color:#C85A1E;margin:3px 0;text-align:center;}
+.card-back-btns{display:flex;gap:6px;margin-top:6px;}
+/* Match */
+.match-info{text-align:center;font-size:0.82rem;color:#1a5c5c;font-weight:700;margin-bottom:10px;}
+.match-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.match-col{display:flex;flex-direction:column;gap:8px;}
+.match-item{padding:10px 12px;border-radius:10px;border:2px solid #d0e8e8;background:#fff;cursor:pointer;font-size:0.85rem;font-weight:600;text-align:center;transition:all 0.2s;min-height:52px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:4px;}
+.match-item .mzh{font-size:1.1rem;font-weight:800;color:#1a5c5c;}
+.match-item .mpy{font-size:0.62rem;color:#888;}
+.match-item.selected{background:#e4f2f2;border-color:#1a5c5c;}
+.match-item.correct{background:#d4f4dd;border-color:#27ae60;pointer-events:none;}
+.match-item.wrong{background:#fde8e8;border-color:#e74c3c;animation:shake 0.4s;}
+@keyframes shake{0%,100%{transform:translateX(0);}25%{transform:translateX(-6px);}75%{transform:translateX(6px);}}
+.match-next{display:block;margin:14px auto 0;padding:10px 28px;background:#1a5c5c;color:#fff;border:none;border-radius:10px;font-size:0.9rem;font-weight:800;cursor:pointer;}
+/* Sentence */
+.sent-num{font-size:0.72rem;color:#888;margin-bottom:6px;}
+.sent-prompt{background:#e4f2f2;border-radius:10px;padding:14px;margin-bottom:12px;}
+.sent-prompt .en{font-size:1rem;font-weight:700;color:#1a5c5c;margin-bottom:4px;}
+.sent-prompt .py{font-size:0.82rem;color:#C85A1E;}
+.answer-area{min-height:52px;border:2px dashed #aaa;border-radius:10px;padding:10px;display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px;background:#fafafa;}
+.tile{padding:8px 14px;border-radius:8px;font-size:1rem;font-weight:700;cursor:pointer;border:2px solid #1a5c5c;background:#fff;color:#1a5c5c;transition:all 0.15s;}
+.tile:hover{background:#e4f2f2;}
+.tile.placed{background:#1a5c5c;color:#fff;}
+.tile.placed:hover{background:#C85A1E;border-color:#C85A1E;}
+.word-bank{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px;}
+.sent-btns{display:flex;gap:10px;}
+.check-btn{flex:1;padding:10px;background:#C85A1E;color:#fff;border:none;border-radius:10px;font-size:0.9rem;font-weight:800;cursor:pointer;}
+.next-btn{flex:1;padding:10px;background:#1a5c5c;color:#fff;border:none;border-radius:10px;font-size:0.9rem;font-weight:800;cursor:pointer;display:none;}
+.result-box{padding:12px;border-radius:10px;font-weight:700;font-size:0.9rem;margin-bottom:10px;display:none;}
+.result-box.correct{background:#d4f4dd;color:#27ae60;}
+.result-box.wrong{background:#fde8e8;color:#e74c3c;}
+/* Report */
+.report-wrap{background:#fff;border-radius:14px;padding:20px;max-width:480px;margin:0 auto;}
+.report-title{font-size:1.1rem;font-weight:900;color:#1a5c5c;margin-bottom:4px;}
+.report-sub{font-size:0.78rem;color:#888;margin-bottom:16px;}
+.stat-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;}
+.stat-box{background:#e4f2f2;border-radius:10px;padding:14px;text-align:center;}
+.stat-num{font-size:1.6rem;font-weight:900;color:#1a5c5c;}
+.stat-lbl{font-size:0.68rem;color:#555;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;}
+.prog-row{margin-bottom:10px;}
+.prog-lbl{display:flex;justify-content:space-between;font-size:0.78rem;font-weight:700;color:#333;margin-bottom:4px;}
+.prog-bar{height:10px;background:#e0f0f0;border-radius:5px;}
+.prog-fill{height:100%;background:#1a5c5c;border-radius:5px;transition:width 0.6s;}
+.report-btns{display:flex;gap:10px;margin-top:16px;}
+.rpt-btn{flex:1;padding:10px;border:none;border-radius:10px;font-size:0.82rem;font-weight:800;cursor:pointer;}
+.rpt-btn.print{background:#1a5c5c;color:#fff;}
+.rpt-btn.email{background:#C85A1E;color:#fff;}
+.report-footer{font-size:0.68rem;color:#aaa;text-align:center;margin-top:14px;font-style:italic;}
+.footer{background:#1a5c5c;color:#9fd4d4;text-align:center;padding:8px;font-size:0.68rem;}
+</style>
+</head>
+<body>
+
+<!-- MODAL -->
+<div id="modal">
+  <div class="modal-box">
+    <div style="font-size:2.5rem;">🐼</div>
+    <h2>Welcome to ChiMigo!</h2>
+    <p>What's your name? We'll put it on your practice report.</p>
+    <input type="text" id="nameInput" placeholder="Your name..." maxlength="40"/>
+    <button class="modal-btn" onclick="startPractice()">Let's Go! 🚀</button>
+    <button class="skip-btn" onclick="startPractice()">Skip</button>
+  </div>
+</div>
+
+<!-- HEADER -->
+<div class="hdr">
+  <div class="meta">🐼 ChiMigo™ · Practice · Project 2 · Set 1 · Book 7</div>
+  <div class="title">Adjectives (3): Expand Descriptions, Build Variety</div>
+  <div class="sub">My Journey in China</div>
+  <div class="score-badge">⭐ <span id="scoreDisplay">0</span></div>
+</div>
+<a href="reader.html" class="back-link">← Back to Reader</a>
+
+<!-- TABS -->
+<div class="tabs">
+  <button class="tab-btn active" onclick="switchTab(0)">📚 Flashcards</button>
+  <button class="tab-btn" onclick="switchTab(1)">🎯 Tap the Match</button>
+  <button class="tab-btn" onclick="switchTab(2)">🧩 Build a Sentence</button>
+  <button class="tab-btn" onclick="switchTab(3)">📊 Parent Report</button>
+</div>
+
+<!-- TAB 1 -->
+<div class="tab-pane active" id="tab0">
+  <div class="fc-progress" id="fcLabel">Tap a card to hear &amp; flip!&nbsp; 0 / 14 reviewed</div>
+  <div class="fc-bar-wrap"><div class="fc-bar-fill" id="fcBar" style="width:0%"></div></div>
+  <div class="cards-grid" id="cardsGrid"></div>
+</div>
+
+<!-- TAB 2 -->
+<div class="tab-pane" id="tab1">
+  <div class="match-info">Round <span id="roundNum">1</span> &nbsp;|&nbsp; ✅ <span id="matchScore">0</span> correct</div>
+  <div class="match-grid">
+    <div class="match-col" id="colLeft"></div>
+    <div class="match-col" id="colRight"></div>
+  </div>
+  <button class="match-next" id="matchNextBtn" style="display:none;" onclick="buildMatchRound()">Next Round ▶</button>
+</div>
+
+<!-- TAB 3 -->
+<div class="tab-pane" id="tab2">
+  <div class="sent-num" id="sentNum">Sentence 1 of 8</div>
+  <div class="sent-prompt">
+    <div class="en" id="sentEn"></div>
+    <div class="py" id="sentPy"></div>
+  </div>
+  <div class="answer-area" id="answerArea"></div>
+  <div class="word-bank" id="wordBank"></div>
+  <div class="result-box" id="resultBox"></div>
+  <div class="sent-btns">
+    <button class="check-btn" onclick="checkSentence()">✓ Check Answer</button>
+    <button class="next-btn" id="nextSentBtn" onclick="nextSentence()">Next Sentence ▶</button>
+  </div>
+</div>
+
+<!-- TAB 4 -->
+<div class="tab-pane" id="tab3">
+  <div style="padding:16px;">
+    <div class="report-wrap">
+      <div class="report-title">🐼 ChiMigo™ Practice Report</div>
+      <div class="report-sub" id="reportMeta">Student · April 2026</div>
+      <div class="stat-row">
+        <div class="stat-box"><div class="stat-num" id="rTime">0m</div><div class="stat-lbl">Practice Time</div></div>
+        <div class="stat-box"><div class="stat-num" id="rStars">0</div><div class="stat-lbl">Stars Earned</div></div>
+        <div class="stat-box"><div class="stat-num" id="rActs">0</div><div class="stat-lbl">Activities Tried</div></div>
+        <div class="stat-box"><div class="stat-num" id="rScore">0%</div><div class="stat-lbl">Overall Score</div></div>
+      </div>
+      <div class="prog-row">
+        <div class="prog-lbl"><span>Flashcards reviewed</span><span id="pFc">0%</span></div>
+        <div class="prog-bar"><div class="prog-fill" id="barFc" style="width:0%"></div></div>
+      </div>
+      <div class="prog-row">
+        <div class="prog-lbl"><span>Match correct</span><span id="pMatch">0%</span></div>
+        <div class="prog-bar"><div class="prog-fill" id="barMatch" style="width:0%"></div></div>
+      </div>
+      <div class="prog-row">
+        <div class="prog-lbl"><span>Sentences correct</span><span id="pSent">0%</span></div>
+        <div class="prog-bar"><div class="prog-fill" id="barSent" style="width:0%"></div></div>
+      </div>
+      <div class="report-btns">
+        <button class="rpt-btn print" onclick="window.print()">🖨 Print / Save PDF</button>
+        <button class="rpt-btn email" onclick="emailReport()">✉ Email to Parent</button>
+      </div>
+      <div class="report-footer">Project 2 · My Journey in China · Set 1 · Book 7 · Adjectives (3): Expand Descriptions, Build Variety</div>
+    </div>
+  </div>
+</div>
+
+<div class="footer">ChiMigo™ · chiwonder.com · All rights reserved</div>
+
+<script>
+/* ── Web Speech TTS (v4) ── */
+var zhVoice=null,enVoice=null;
+function loadVoices(){
+  var vs=speechSynthesis.getVoices();
+  zhVoice=vs.find(function(v){return v.lang==='zh-CN';})||vs.find(function(v){return v.lang==='zh-TW';})||vs.find(function(v){return v.lang.startsWith('zh');})||null;
+  enVoice=vs.find(function(v){return v.lang==='en-US';})||vs.find(function(v){return v.lang.startsWith('en');})||null;
+}
+if(typeof speechSynthesis!=='undefined'){speechSynthesis.onvoiceschanged=loadVoices;loadVoices();}
+function speakZh(t){if(!window.speechSynthesis)return;speechSynthesis.cancel();var u=new SpeechSynthesisUtterance(t);u.lang='zh-CN';u.rate=0.85;u.pitch=1.0;if(zhVoice)u.voice=zhVoice;speechSynthesis.speak(u);}
+function speakEn(t){if(!window.speechSynthesis)return;speechSynthesis.cancel();var u=new SpeechSynthesisUtterance(t);u.lang='en-US';u.rate=0.9;u.pitch=1.0;if(enVoice)u.voice=enVoice;speechSynthesis.speak(u);}
+
+/* ── Vocab — P2 S1 B7 ── */
+var VOCAB=[
+  {zh:'贵',en:'expensive',py:'/guì/ (gwey4)'},
+  {zh:'便宜',en:'cheap',py:'/pián yi/ (peeahn2 ee5)'},
+  {zh:'老',en:'old (people)',py:'/lǎo/ (lao3)'},
+  {zh:'年轻',en:'young',py:'/nián qīng/ (neeahn2 cheeng1)'},
+  {zh:'新',en:'new',py:'/xīn/ (sheen1)'},
+  {zh:'旧',en:'old (objects)',py:'/jiù/ (jeeoh4)'},
+  {zh:'好吃',en:'delicious (food)',py:'/hǎo chī/ (hao3 chr1)'},
+  {zh:'好喝',en:'delicious (drink)',py:'/hǎo hē/ (hao3 her1)'},
+  {zh:'好看',en:'good-looking',py:'/hǎo kàn/ (hao3 kahn4)'},
+  {zh:'还好',en:'so-so / ok',py:'/hái hǎo/ (hai2 hao3)'},
+  {zh:'饺子',en:'dumplings',py:'/jiǎo zi/ (jeeao3 dzuh5)'},
+  {zh:'苹果汁',en:'apple juice',py:'/píng guǒ zhī/ (peeng2 gwoh3 jrr1)'},
+  {zh:'鞋子',en:'shoes',py:'/xié zi/ (sheeeh2 dzuh5)'},
+  {zh:'爷爷',en:'grandpa (dad\'s side)',py:'/yé ye/ (yeeh2 yeeh5)'}
+];
+
+/* ── Sentences (8) ── */
+var SENTENCES=[
+  {en:'Those dumplings are very delicious.',py:'Nà ge jiǎo zi hěn hǎo chī.',words:['那个','饺子','很','好吃','。']},
+  {en:'Is that apple juice delicious?',py:'Nà píng guǒ zhī hǎo hē ma?',words:['那','苹果汁','好喝','吗','？']},
+  {en:'My grandpa is very old.',py:'Wǒ de yé ye hěn lǎo.',words:['我的','爷爷','很','老','。']},
+  {en:'My teacher is very young.',py:'Wǒ de lǎo shī hěn nián qīng.',words:['我的','老师','很','年轻','。']},
+  {en:'These shoes are very new.',py:'Zhè shuāng xié zi hěn xīn.',words:['这双','鞋子','很','新','。']},
+  {en:'Those shoes are very old.',py:'Nà shuāng xié zi hěn jiù.',words:['那双','鞋子','很','旧','。']},
+  {en:'Is that cellphone cheap?',py:'Nà ge shǒu jī pián yi ma?',words:['那个','手机','便宜','吗','？']},
+  {en:'That computer is very expensive.',py:'Nà ge diàn nǎo hěn guì.',words:['那个','电脑','很','贵','。']}
+];
+
+/* ── State ── */
+var studentName='Student',score=0,startTime=Date.now();
+var fcSeen=[],fcCount=0;
+var matchCorrect=0,matchTotal=0,roundNum=1;
+var sentIdx=0,sentCorrect=0,sentTotal=0;
+var activitiesTried=new Set();
+function addScore(n){score+=n;document.getElementById('scoreDisplay').textContent=score;}
+
+/* ── Modal ── */
+function startPractice(){
+  var inp=document.getElementById('nameInput').value.trim();
+  studentName=inp||'Student';
+  document.getElementById('modal').style.display='none';
+  buildFlashcards();buildMatchRound();buildSentence();
+}
+document.getElementById('nameInput').addEventListener('keydown',function(e){if(e.key==='Enter')startPractice();});
+
+/* ── Tabs ── */
+function switchTab(i){
+  document.querySelectorAll('.tab-btn').forEach(function(b,j){b.classList.toggle('active',i===j);});
+  document.querySelectorAll('.tab-pane').forEach(function(p,j){p.classList.toggle('active',i===j);});
+  activitiesTried.add(i);
+  if(i===3)updateReport();
+}
+
+/* ── Tab 1: Flashcards ── */
+function buildFlashcards(){
+  fcSeen=VOCAB.map(function(){return false;});
+  var grid=document.getElementById('cardsGrid');
+  grid.innerHTML='';
+  VOCAB.forEach(function(v,i){
+    var wrap=document.createElement('div');
+    wrap.className='card-wrap';
+    var zhEsc=v.zh.replace(/'/g,"\\'");
+    var enEsc=v.en.replace(/'/g,"\\'");
+    wrap.innerHTML=
+      '<div class="card-inner">'+
+        '<div class="card-front">'+
+          '<div class="card-zh">'+v.zh+'</div>'+
+          '<div class="card-py">'+v.py+'</div>'+
+          '<div class="card-hint">tap to hear &amp; flip</div>'+
+          /* v4: stopPropagation on front 中 button */
+          '<button class="btn-zh card-spk" onclick="event.stopPropagation();speakZh(\''+zhEsc+'\')">中</button>'+
+        '</div>'+
+        '<div class="card-back">'+
+          '<div class="card-en">'+v.en+'</div>'+
+          '<div class="card-py2">'+v.py+'</div>'+
+          '<div class="card-back-btns">'+
+            /* v4: stopPropagation on BOTH back buttons — prevents speakZh cancelling speakEn */
+            '<button class="btn-zh" onclick="event.stopPropagation();speakZh(\''+zhEsc+'\')">中</button>'+
+            '<button class="btn-en" onclick="event.stopPropagation();speakEn(\''+enEsc+'\')">英</button>'+
+          '</div>'+
+        '</div>'+
+      '</div>';
+    wrap.addEventListener('click',function(){
+      speakZh(v.zh);
+      if(!wrap.classList.contains('flipped')){
+        wrap.classList.add('flipped');
+        if(!fcSeen[i]){fcSeen[i]=true;fcCount++;addScore(1);
+          var pct=Math.round(fcCount/VOCAB.length*100);
+          document.getElementById('fcBar').style.width=pct+'%';
+          document.getElementById('fcLabel').textContent='Tap a card to hear & flip!  '+fcCount+' / '+VOCAB.length+' reviewed';
+        }
+      } else {wrap.classList.remove('flipped');}
+    });
+    grid.appendChild(wrap);
+  });
+}
+
+/* ── Tab 2: Match ── */
+var matchSelL=null,matchSelR=null;
+function shuffle(a){var b=a.slice();for(var i=b.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=b[i];b[i]=b[j];b[j]=t;}return b;}
+function buildMatchRound(){
+  document.getElementById('matchNextBtn').style.display='none';
+  matchSelL=null;matchSelR=null;
+  var pool=shuffle(VOCAB).slice(0,4);
+  var lItems=shuffle(pool),rItems=shuffle(pool);
+  var cL=document.getElementById('colLeft'),cR=document.getElementById('colRight');
+  cL.innerHTML='';cR.innerHTML='';
+  lItems.forEach(function(v){
+    var el=document.createElement('div');
+    el.className='match-item';el.dataset.zh=v.zh;
+    var zhEsc=v.zh.replace(/'/g,"\\'");
+    el.innerHTML='<div class="mzh">'+v.zh+'</div><div class="mpy">'+v.py+'</div>'+
+      '<button class="btn-zh" onclick="event.stopPropagation();speakZh(\''+zhEsc+'\')">中</button>';
+    el.addEventListener('click',function(){selectL(el,v);});
+    cL.appendChild(el);
+  });
+  rItems.forEach(function(v){
+    var el=document.createElement('div');
+    el.className='match-item';el.dataset.zh=v.zh;
+    var enEsc=v.en.replace(/'/g,"\\'");
+    el.innerHTML=v.en+
+      '<button class="btn-en" onclick="event.stopPropagation();speakEn(\''+enEsc+'\')">英</button>';
+    el.addEventListener('click',function(){selectR(el,v);});
+    cR.appendChild(el);
+  });
+  document.getElementById('roundNum').textContent=roundNum;
+}
+function selectL(el,v){if(el.classList.contains('correct'))return;document.querySelectorAll('#colLeft .match-item').forEach(function(e){e.classList.remove('selected');});el.classList.add('selected');matchSelL={el:el,v:v};if(matchSelR)checkMatch();}
+function selectR(el,v){if(el.classList.contains('correct'))return;document.querySelectorAll('#colRight .match-item').forEach(function(e){e.classList.remove('selected');});el.classList.add('selected');matchSelR={el:el,v:v};if(matchSelL)checkMatch();}
+function checkMatch(){
+  var L=matchSelL,R=matchSelR;matchSelL=null;matchSelR=null;matchTotal++;
+  if(L.v.zh===R.v.zh){
+    L.el.classList.remove('selected');R.el.classList.remove('selected');
+    L.el.classList.add('correct');R.el.classList.add('correct');
+    matchCorrect++;addScore(5);
+    document.getElementById('matchScore').textContent=matchCorrect;
+    if(document.querySelectorAll('#colLeft .correct').length===4){roundNum++;setTimeout(function(){document.getElementById('matchNextBtn').style.display='block';},700);}
+  } else {
+    L.el.classList.add('wrong');R.el.classList.add('wrong');
+    setTimeout(function(){L.el.classList.remove('wrong','selected');R.el.classList.remove('wrong','selected');},700);
+  }
+}
+
+/* ── Tab 3: Sentences ── */
+var placedWords=[],sentOrder=[];
+function buildSentence(){
+  if(sentIdx>=SENTENCES.length)sentIdx=0;
+  var s=SENTENCES[sentIdx];
+  document.getElementById('sentNum').textContent='Sentence '+(sentIdx+1)+' of '+SENTENCES.length;
+  document.getElementById('sentEn').textContent=s.en;
+  document.getElementById('sentPy').textContent=s.py;
+  document.getElementById('resultBox').style.display='none';
+  document.getElementById('nextSentBtn').style.display='none';
+  placedWords=[];sentOrder=shuffle(s.words);
+  renderWordBank();renderAnswerArea();
+}
+function renderWordBank(){
+  var wb=document.getElementById('wordBank');wb.innerHTML='';
+  sentOrder.forEach(function(w,i){
+    if(placedWords.indexOf(i)===-1){
+      var t=document.createElement('button');t.className='tile';t.textContent=w;
+      t.addEventListener('click',function(){placedWords.push(i);renderWordBank();renderAnswerArea();});
+      wb.appendChild(t);
+    }
+  });
+}
+function renderAnswerArea(){
+  var aa=document.getElementById('answerArea');aa.innerHTML='';
+  placedWords.forEach(function(idx){
+    var t=document.createElement('button');t.className='tile placed';t.textContent=sentOrder[idx];
+    t.addEventListener('click',function(){placedWords=placedWords.filter(function(i){return i!==idx;});renderWordBank();renderAnswerArea();});
+    aa.appendChild(t);
+  });
+}
+function checkSentence(){
+  var s=SENTENCES[sentIdx];
+  var answer=placedWords.map(function(i){return sentOrder[i];}).join('');
+  var correct=s.words.join('');
+  var rb=document.getElementById('resultBox');rb.style.display='block';sentTotal++;
+  if(answer===correct){rb.className='result-box correct';rb.textContent='✅ Correct! Great job!';sentCorrect++;addScore(10);}
+  else{rb.className='result-box wrong';rb.textContent='❌ Correct answer: '+correct;}
+  document.getElementById('nextSentBtn').style.display='block';
+}
+function nextSentence(){sentIdx++;buildSentence();}
+
+/* ── Tab 4: Report ── */
+function updateReport(){
+  var mins=Math.round((Date.now()-startTime)/60000);
+  document.getElementById('rTime').textContent=mins+'m';
+  document.getElementById('rStars').textContent=score;
+  document.getElementById('rActs').textContent=activitiesTried.size;
+  document.getElementById('rScore').textContent=Math.min(100,Math.round(score/(VOCAB.length*2)*100))+'%';
+  var fcPct=Math.round(fcCount/VOCAB.length*100);
+  var mPct=matchTotal>0?Math.round(matchCorrect/matchTotal*100):0;
+  var sPct=sentTotal>0?Math.round(sentCorrect/sentTotal*100):0;
+  [['Fc',fcPct],['Match',mPct],['Sent',sPct]].forEach(function(p){
+    document.getElementById('p'+p[0]).textContent=p[1]+'%';
+    document.getElementById('bar'+p[0]).style.width=p[1]+'%';
+  });
+  var today=new Date().toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});
+  document.getElementById('reportMeta').textContent=studentName+' · '+today;
+}
+function emailReport(){
+  updateReport();
+  var body='ChiMigo Practice Report\n\nStudent: '+studentName+
+    '\nBook: P2 Set 1 Book 7 — Adjectives (3): Expand Descriptions, Build Variety'+
+    '\nStars: '+score+'\nFlashcards: '+fcCount+'/'+VOCAB.length+
+    '\nMatch correct: '+matchCorrect+'\nSentences: '+sentCorrect+'/'+sentTotal;
+  window.location.href='mailto:?subject=ChiMigo Practice Report&body='+encodeURIComponent(body);
+}
+</script>
+</body>
+</html>
