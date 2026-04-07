@@ -2817,7 +2817,7 @@ function hideEpubPageNums() {
     }
   });
 }
-function scalePages(){document.querySelectorAll('.epub-page-wrap').forEach(function(w){var avail=w.parentElement.clientWidth||400;var sc=Math.min(1,avail/842);w.style.transform='scale('+sc+')';w.style.height=(595*sc)+'px';});}
+function scalePages(){document.querySelectorAll('.epub-page-wrap').forEach(function(w){var avail=window.innerWidth||400;var sc=Math.min(1,avail/842);w.style.transform='scale('+sc+')';w.style.height=(595*sc)+'px';});}
 window.addEventListener('resize',scalePages);
 function showPage(n){
   document.getElementById('page'+cur).style.display='none';
