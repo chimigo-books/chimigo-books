@@ -17,8 +17,8 @@ html,body{margin:0;padding:0;width:auto;height:auto;overflow:visible;font-family
 .epub-page-wrap .btn-zh{display:inline-block;width:32px;height:32px;background:#C85A1E;border-radius:10px;border:none;cursor:pointer;color:#fff;font-weight:800;font-size:0.68rem;line-height:32px;text-align:center;padding:0;vertical-align:middle;}
 .epub-page-wrap .Basic-Graphics-Frame{border:none!important;}
 .epub-page-wrap audio{display:none;}
-.epub-scaler{width:100%;overflow:visible;display:flex;justify-content:center;background:#fff;}
-.epub-page-wrap{width:842px;transform-origin:top center;}
+.epub-scaler{width:100%;overflow:hidden;display:flex;justify-content:center;background:#fff;}
+.epub-page-wrap{width:842px;transform-origin:top left;}
 .cover-wrap{background:#f5f0e8;display:flex;justify-content:center;padding:20px;min-height:500px;align-items:center;}
 .cover-img{max-width:100%;max-height:580px;border-radius:8px;box-shadow:0 4px 24px rgba(0,0,0,0.2);}
 @font-face {
@@ -2817,7 +2817,7 @@ function hideEpubPageNums() {
     }
   });
 }
-function scalePages(){var sw=window.innerWidth||400;var sc=Math.min(1,sw/842);document.querySelectorAll('.epub-page-wrap').forEach(function(w){w.style.zoom=sc;w.style.height='';})}});});}
+function scalePages(){document.querySelectorAll('.epub-page-wrap').forEach(function(w){var avail=w.parentElement.clientWidth||400;var sc=Math.min(1,avail/842);w.style.transform='scale('+sc+')';w.style.height=(595*sc)+'px';});}
 window.addEventListener('resize',scalePages);
 function showPage(n){
   document.getElementById('page'+cur).style.display='none';
