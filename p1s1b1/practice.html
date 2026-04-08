@@ -132,12 +132,12 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;backgrou
 <!-- WELCOME MODAL -->
 <div class="modal-bg" id="modal-bg">
   <div class="modal">
-    <div style="font-size:2.5rem">🐼</div>
+    <div style="font-size:2.5rem"></div>
     <h2>Welcome to ChiMigo!</h2>
     <p>What's your name? We'll put it on your practice report.</p>
     <input type="text" id="name-input" placeholder="Student name..." maxlength="40">
     <div class="modal-btns">
-      <button class="btn-go" onclick="startApp()">Let's Go! 🚀</button>
+      <button class="btn-go" onclick="startApp()">Let's Go! </button>
       <button class="btn-skip" onclick="startApp()">Skip</button>
     </div>
   </div>
@@ -146,7 +146,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;backgrou
 <!-- HEADER -->
 <div class="cm-hdr">
   <div class="cm-hdr-left">
-    <div class="cm-sub">🐼 ChiMigo™ · Practice · Set 1 · Book 1</div>
+    <div class="cm-sub"> ChiMigo™ · Practice · Set 1 · Book 1</div>
     <div class="cm-title">Pronouns + "To Be" Sentence Patterns</div>
     <div class="cm-sub2">Who Are You? · 你是谁？</div>
   </div>
@@ -158,10 +158,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;backgrou
 
 <!-- TABS -->
 <div class="tab-bar">
-  <div class="tab active" onclick="switchTab(0)">📚 Flashcards</div>
-  <div class="tab" onclick="switchTab(1)">🎯 Tap the Match</div>
-  <div class="tab" onclick="switchTab(2)">🧩 Build a Sentence</div>
-  <div class="tab" onclick="switchTab(3)">📊 Parent Report</div>
+  <div class="tab active" onclick="switchTab(0)"> Flashcards</div>
+  <div class="tab" onclick="switchTab(1)"> Tap the Match</div>
+  <div class="tab" onclick="switchTab(2)"> Build a Sentence</div>
+  <div class="tab" onclick="switchTab(3)"> Parent Report</div>
 </div>
 
 <!-- PANEL 0: FLASHCARDS -->
@@ -186,7 +186,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;backgrou
   <div class="sb-tiles" id="sb-tiles"></div>
   <div class="sb-result" id="sb-result"></div>
   <div class="sb-btns">
-    <button class="sb-check" onclick="checkSentence()">✓ Check Answer</button>
+    <button class="sb-check" onclick="checkSentence()"> Check Answer</button>
     <button class="sb-next" onclick="nextSentence()">Next ▶</button>
   </div>
 </div>
@@ -194,9 +194,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;backgrou
 <!-- PANEL 3: PARENT REPORT -->
 <div class="panel" id="panel-3">
   <div class="rpt-btns">
-    <button class="btn-rpt btn-print" onclick="window.print()">🖨 Print / Save PDF</button>
-    <button class="btn-rpt btn-email" onclick="emailReport()">✉ Email to Parent</button>
-    <button class="btn-rpt btn-airtable" id="btn-airtable" onclick="saveToAirtable()">☁️ Save to Airtable</button>
+    <button class="btn-rpt btn-print" onclick="window.print()"> Print / Save PDF</button>
+    <button class="btn-rpt btn-email" onclick="emailReport()"> Email to Parent</button>
+    <button class="btn-rpt btn-airtable" id="btn-airtable" onclick="saveToAirtable()">️ Save to Airtable</button>
   </div>
   <div class="rpt-card" id="rpt-card"></div>
 </div>
@@ -207,7 +207,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;backgrou
     <div class="celebrate-icon" id="cel-icon"></div>
     <div class="celebrate-title" id="cel-title"></div>
     <div class="celebrate-msg" id="cel-msg"></div>
-    <button class="celebrate-close" onclick="hideCelebrate()">Continue 🚀</button>
+    <button class="celebrate-close" onclick="hideCelebrate()">Continue </button>
   </div>
 </div>
 
@@ -305,7 +305,7 @@ function buildFlashcards(){
           '<div class="flash-zh">'+v.zh+'</div>'+
           '<div class="flash-py">'+v.py+' '+v.ph+'</div>'+
           '<div class="flash-hint">tap to flip</div>'+
-          '<button class="flash-speak" onclick="event.stopPropagation();playZh(VOCAB['+i+'])">🔊</button>'+
+          '<button class="flash-speak" onclick="event.stopPropagation();playZh(VOCAB['+i+'])"></button>'+
         '</div>'+
         '<div class="flash-back">'+
           '<div class="flash-en">'+v.en+'</div>'+
@@ -330,7 +330,7 @@ function flipCard(i){
     var prog='Tap each card to flip it!  '+flashedCards.size+' / '+VOCAB.length+' reviewed';
     document.getElementById('fc-progress').textContent=prog;
     document.getElementById('progress-bar').textContent=prog;
-    if(flashedCards.size===VOCAB.length)setTimeout(function(){showCelebrate('🌟','All cards done!','You reviewed every word! +'+VOCAB.length+' stars');},500);
+    if(flashedCards.size===VOCAB.length)setTimeout(function(){showCelebrate('','All cards done!','You reviewed every word! +'+VOCAB.length+' stars');},500);
   }
 }
 
@@ -369,12 +369,12 @@ function selectMatch(btn,pairs){
     a.classList.add('correct');b.classList.add('correct');
     matchCorrect++;quizTotal++;addStar(5);
     document.getElementById('quiz-score-lbl').textContent=matchCorrect;
-    fb.textContent='✅ Correct!'; fb.className='quiz-feedback correct';
+    fb.textContent=' Correct!'; fb.className='quiz-feedback correct';
     var matched=document.querySelectorAll('.match-btn.correct').length;
     if(matched===8)setTimeout(function(){initMatch();fb.textContent='';},800);
   } else {
     a.classList.add('wrong');b.classList.add('wrong');
-    fb.textContent='❌ Try again!'; fb.className='quiz-feedback wrong';
+    fb.textContent=' Try again!'; fb.className='quiz-feedback wrong';
     setTimeout(function(){a.classList.remove('wrong','selected');b.classList.remove('wrong');fb.textContent='';},800);
   }
   matchSelected=null;
@@ -419,11 +419,11 @@ function checkSentence(){
   var res=document.getElementById('sb-result');
   sbAttempted++;
   if(JSON.stringify(sbPlaced)===JSON.stringify(correct)){
-    res.textContent='✅ 太棒了！ Excellent!'; res.className='sb-result correct';
+    res.textContent=' 太棒了！ Excellent!'; res.className='sb-result correct';
     sbCorrect++; addStar(10);
     setTimeout(function(){nextSentence();},1000);
   } else {
-    res.textContent='❌ Correct: '+correct.join(' '); res.className='sb-result wrong';
+    res.textContent=' Correct: '+correct.join(' '); res.className='sb-result wrong';
   }
 }
 
@@ -449,7 +449,7 @@ function buildReport(){
   var overall=Math.round((fcP+qzP+sbP)/3);
   document.getElementById('rpt-fc-label') && null;
   document.getElementById('rpt-card').innerHTML=
-    '<h3>🐼 ChiMigo Practice Report</h3>'+
+    '<h3> ChiMigo Practice Report</h3>'+
     '<div class="rpt-meta">Student: '+studentName+' · '+now.toLocaleDateString()+' · Set 1, Book 1</div>'+
     '<div class="rpt-section"><h4>Session Summary</h4>'+
       '<div class="rpt-row"><span>Stars Earned</span><span>⭐ '+stars+'</span></div>'+
@@ -478,7 +478,7 @@ function emailReport(){
   );
   window.location.href='mailto:?subject=ChiMigo Practice Report&body='+body;
 }
-function saveToAirtable(){ alert('Airtable integration coming soon! 🐼'); }
+function saveToAirtable(){ alert('Airtable integration coming soon! '); }
 
 /* ── CELEBRATE ── */
 function showCelebrate(icon,title,msg){

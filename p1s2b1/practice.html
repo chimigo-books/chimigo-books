@@ -97,18 +97,18 @@ body{font-family:"Segoe UI",sans-serif;background:#f0ede8;min-height:100vh;}
 
 <div class="modal-overlay" id="modal">
   <div class="modal-box">
-    <div class="modal-panda">🐼</div>
+    <div class="modal-panda"></div>
     <div class="modal-title">Welcome to ChiMigo!</div>
     <div class="modal-sub">What's your name? We'll put it on your practice report.</div>
     <input class="modal-input" id="nameInput" type="text" placeholder="Student name..." maxlength="40">
-    <button class="modal-go" onclick="startSession()">Let's Go! 🚀</button>
+    <button class="modal-go" onclick="startSession()">Let's Go! </button>
     <button class="modal-skip" onclick="startSession()">Skip</button>
   </div>
 </div>
 
 <div class="header">
   <div class="hdr-left">
-    <div class="top">🐼 ChiMigo™ · Practice · Set 2 · Book 1</div>
+    <div class="top"> ChiMigo™ · Practice · Set 2 · Book 1</div>
     <div class="main">Measure Words for Counting Objects</div>
     <div class="sub">一本书，一支笔 · Count objects with the right measure word</div>
   </div>
@@ -116,10 +116,10 @@ body{font-family:"Segoe UI",sans-serif;background:#f0ede8;min-height:100vh;}
 </div>
 
 <div class="tab-nav">
-  <button class="tab-btn active" onclick="switchTab('flashcard',this)">📚 Flashcards</button>
-  <button class="tab-btn" onclick="switchTab('match',this)">🎯 Tap the Match</button>
-  <button class="tab-btn" onclick="switchTab('sentence',this)">🧩 Build a Sentence</button>
-  <button class="tab-btn" onclick="switchTab('report',this)">📊 Parent Report</button>
+  <button class="tab-btn active" onclick="switchTab('flashcard',this)"> Flashcards</button>
+  <button class="tab-btn" onclick="switchTab('match',this)"> Tap the Match</button>
+  <button class="tab-btn" onclick="switchTab('sentence',this)"> Build a Sentence</button>
+  <button class="tab-btn" onclick="switchTab('report',this)"> Parent Report</button>
 </div>
 
 <div id="tab-flashcard" class="activity">
@@ -133,7 +133,7 @@ body{font-family:"Segoe UI",sans-serif;background:#f0ede8;min-height:100vh;}
     <div class="match-col" id="match-left"></div>
     <div class="match-col" id="match-right"></div>
   </div>
-  <button class="match-new" onclick="newMatch()">🔀 New Game</button>
+  <button class="match-new" onclick="newMatch()"> New Game</button>
 </div>
 
 <div id="tab-sentence" class="activity" style="display:none">
@@ -144,40 +144,40 @@ body{font-family:"Segoe UI",sans-serif;background:#f0ede8;min-height:100vh;}
   </div>
   <div class="answer-area" id="answer-area"></div>
   <div class="word-bank" id="word-bank"></div>
-  <button class="sentence-check" onclick="checkSentence()">✓ Check Answer</button>
+  <button class="sentence-check" onclick="checkSentence()"> Check Answer</button>
   <div class="sentence-result" id="sent-result" style="display:none"></div>
   <button class="match-new" onclick="nextSentence()" style="margin-top:4px">Next Sentence ▶</button>
 </div>
 
 <div id="tab-report" class="activity" style="display:none">
   <div class="report-actions">
-    <button class="report-btn rpt-print" onclick="window.print()">🖨 Print / Save PDF</button>
-    <button class="report-btn rpt-email" onclick="emailReport()">✉ Email to Parent</button>
-    <button class="report-btn rpt-airtable">☁ Save to Airtable</button>
+    <button class="report-btn rpt-print" onclick="window.print()"> Print / Save PDF</button>
+    <button class="report-btn rpt-email" onclick="emailReport()"> Email to Parent</button>
+    <button class="report-btn rpt-airtable"> Save to Airtable</button>
   </div>
-  <div class="airtable-note">⚙ Set AIRTABLE_TOKEN and AIRTABLE_BASE_ID in the script to enable cloud saving.</div>
+  <div class="airtable-note"> Set AIRTABLE_TOKEN and AIRTABLE_BASE_ID in the script to enable cloud saving.</div>
   <div class="report-card">
     <div class="report-header">
       <span class="rpt-date" id="rpt-date"></span>
-      <div class="rpt-title">🐼 ChiMigo™</div>
+      <div class="rpt-title"> ChiMigo™</div>
       <div class="rpt-sub">Student: <span id="rpt-name">Student</span></div>
       <div class="rpt-sub">Project 1 · Set 2 · Book 1 · <em>Measure Words for Counting Objects</em></div>
     </div>
     <div class="report-body">
-      <div class="section-title">📊 SESSION SUMMARY</div>
+      <div class="section-title"> SESSION SUMMARY</div>
       <div class="stat-grid">
         <div class="stat-box"><div class="stat-val" id="rpt-time">—</div><div class="stat-lbl">Total Practice Time</div></div>
         <div class="stat-box"><div class="stat-val" id="rpt-stars">0 ⭐</div><div class="stat-lbl">Stars Earned</div></div>
         <div class="stat-box"><div class="stat-val" id="rpt-acts">0 / 3</div><div class="stat-lbl">Activities Tried</div></div>
         <div class="stat-box"><div class="stat-val" id="rpt-score">—</div><div class="stat-lbl">Overall Score</div></div>
       </div>
-      <div class="section-title">📚 FLASHCARDS</div>
+      <div class="section-title"> FLASHCARDS</div>
       <div class="prog-row"><span class="prog-label">Cards Reviewed</span><span class="prog-val" id="rpt-fc-count">0 / 12</span></div>
       <div class="prog-bar-wrap"><div class="prog-bar-fill" id="rpt-fc-bar" style="width:0%"></div></div>
-      <div class="section-title">🎯 TAP THE MATCH</div>
+      <div class="section-title"> TAP THE MATCH</div>
       <div class="prog-row"><span class="prog-label">Correct Matches</span><span class="prog-val" id="rpt-match-count">0</span></div>
       <div class="prog-bar-wrap"><div class="prog-bar-fill" id="rpt-match-bar" style="width:0%;background:#C85A1E"></div></div>
-      <div class="section-title">🧩 SENTENCE BUILDER</div>
+      <div class="section-title"> SENTENCE BUILDER</div>
       <div class="prog-row"><span class="prog-label">Sentences Completed</span><span class="prog-val" id="rpt-sent-count">0</span></div>
       <div class="prog-bar-wrap"><div class="prog-bar-fill" id="rpt-sent-bar" style="width:0%;background:#f0c060"></div></div>
     </div>
@@ -235,7 +235,7 @@ function buildFlashcards(){
   var g=document.getElementById('fc-grid');g.innerHTML='';
   VOCAB.forEach(function(v,i){
     var c=document.createElement('div');c.className='fc-card';c.id='card'+i;
-    c.innerHTML='<div class="fc-inner"><div class="fc-front"><div class="fc-zh-big">'+v.zh+'</div><div class="fc-py-sm">'+v.py+'</div><div class="fc-tap">tap to flip</div><button class="fc-speaker" onclick="event.stopPropagation();playA(VOCAB['+i+'].za)">🔊</button></div><div class="fc-back"><div class="fc-en-big">'+v.en+'</div><div class="fc-py-back">'+v.py+'</div><div class="fc-back-btns"><button class="btn-zh" onclick="event.stopPropagation();playA(VOCAB['+i+'].za)">中</button><button class="btn-en" onclick="event.stopPropagation();playA(VOCAB['+i+'].ea)">英</button></div></div></div>';
+    c.innerHTML='<div class="fc-inner"><div class="fc-front"><div class="fc-zh-big">'+v.zh+'</div><div class="fc-py-sm">'+v.py+'</div><div class="fc-tap">tap to flip</div><button class="fc-speaker" onclick="event.stopPropagation();playA(VOCAB['+i+'].za)"></button></div><div class="fc-back"><div class="fc-en-big">'+v.en+'</div><div class="fc-py-back">'+v.py+'</div><div class="fc-back-btns"><button class="btn-zh" onclick="event.stopPropagation();playA(VOCAB['+i+'].za)">中</button><button class="btn-en" onclick="event.stopPropagation();playA(VOCAB['+i+'].ea)">英</button></div></div></div>';
     c.addEventListener('click',function(){
       c.classList.toggle('flipped');
       if(c.classList.contains('flipped')){fcReviewed.add(i);addStar(1);playA(v.za);document.getElementById('fc-progress').textContent='Tap each card to flip it!  '+fcReviewed.size+' / '+VOCAB.length+' reviewed';updateReport();}
@@ -304,7 +304,7 @@ function checkSentence(){
   var s=SENTENCES[curSent];
   var ans=answerChars.map(function(x){return x.char;}).join('');
   var res=document.getElementById('sent-result');res.style.display='block';
-  if(ans===s.zh){res.className='sentence-result correct';res.textContent='✓ Correct! '+s.zh;addStar(10);sentCorrect++;updateReport();}
+  if(ans===s.zh){res.className='sentence-result correct';res.textContent=' Correct! '+s.zh;addStar(10);sentCorrect++;updateReport();}
   else{res.className='sentence-result wrong';res.textContent='Try again! Answer: '+s.zh;}
 }
 
